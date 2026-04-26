@@ -1,0 +1,130 @@
+{% extends 'clinique/base.html' %}
+{% block title %}Accueil — Cabinet Médical{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+{% block page_sub %}Bienvenue dans votre espace de gestion{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #fff; border: 1px solid #ece9e4; border-radius: 12px; padding: 18px 20px; }
+    .kpi-top  { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .kpi-label { font-size: 12px; color: #999; font-weight: 500; }
+    .kpi-icon  { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .kpi-icon svg { width: 14px; height: 14px; }
+    .kpi-number { font-size: 32px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .kpi-link   { display: inline-block; font-size: 12px; color: #999; margin-top: 8px; text-decoration: none; }
+    .kpi-link:hover { color: #185fa5; }
+
+    .act-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .act-card { background: #fff; border: 1px solid #ece9e4; border-radius: 12px; padding: 18px; cursor: pointer; transition: border-color .15s; }
+    .act-card:hover { border-color: #c0b8b0; }
+    .act-ico  { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .act-ico svg { width: 17px; height: 17px; }
+    .act-name { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 3px; }
+    .act-desc { font-size: 12px; color: #999; }
+
+    .rdv-section { background: #fff; border: 1px solid #ece9e4; border-radius: 12px; overflow: hidden; }
+    .rdv-head    { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #ece9e4; }
+    .rdv-title   { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+    .rdv-link    { font-size: 12px; color: #185fa5; text-decoration: none; }
+    .rdv-link:hover { text-decoration: underline; }
+    .rdv-row     { display: flex; align-items: center; gap: 13px; padding: 12px 20px; border-bottom: 1px solid #f5f3f0; }
+    .rdv-row:last-child { border-bottom: none; }
+    .rdv-info    { flex: 1; }
+    .rdv-name    { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+    .rdv-doc     { font-size: 12px; color: #999; margin-top: 2px; }
+    .rdv-meta    { text-align: right; }
+    .rdv-date    { font-size: 11px; color: #999; margin-top: 5px; }
+    .empty-state { padding: 48px; text-align: center; color: #bbb; font-size: 13px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-top">
+            <div class="kpi-label">Médecins</div>
+            <div class="kpi-icon" style="background:#eaf0fb">
+                <svg fill="none" stroke="#185fa5" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+        </div>
+        <div class="kpi-number">{{ nb_medecins }}</div>
+        <a href="{% url 'liste_medecins' %}" class="kpi-link">Voir tous →</a>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-top">
+            <div class="kpi-label">Patients</div>
+            <div class="kpi-icon" style="background:#eaf3de">
+                <svg fill="none" stroke="#3b6d11" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+            </div>
+        </div>
+        <div class="kpi-number">{{ nb_patients }}</div>
+        <a href="{% url 'liste_patients' %}" class="kpi-link">Voir tous →</a>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-top">
+            <div class="kpi-label">Rendez-vous</div>
+            <div class="kpi-icon" style="background:#faeeda">
+                <svg fill="none" stroke="#854f0b" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+        </div>
+        <div class="kpi-number">{{ nb_rdv }}</div>
+        <a href="{% url 'liste_rendezvous' %}" class="kpi-link">Voir tous →</a>
+    </div>
+</div>
+
+<div class="act-grid">
+    <div class="act-card">
+        <div class="act-ico" style="background:#eaf0fb">
+            <svg fill="none" stroke="#185fa5" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <div class="act-name">Ajouter un médecin</div>
+        <div class="act-desc">Enregistrer un nouveau praticien</div>
+        <a href="{% url 'ajouter_medecin' %}" class="btn btn-blue-soft" style="margin-top:14px; display:inline-flex;">+ Nouveau</a>
+    </div>
+    <div class="act-card">
+        <div class="act-ico" style="background:#eaf3de">
+            <svg fill="none" stroke="#3b6d11" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+        </div>
+        <div class="act-name">Ajouter un patient</div>
+        <div class="act-desc">Créer un nouveau dossier patient</div>
+        <a href="{% url 'ajouter_patient' %}" class="btn btn-green-soft" style="margin-top:14px; display:inline-flex;">+ Nouveau</a>
+    </div>
+    <div class="act-card">
+        <div class="act-ico" style="background:#faeeda">
+            <svg fill="none" stroke="#854f0b" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m3-9a9 9 0 100 18A9 9 0 0012 3z"/></svg>
+        </div>
+        <div class="act-name">Nouveau rendez-vous</div>
+        <div class="act-desc">Planifier une consultation</div>
+        <a href="{% url 'ajouter_rendezvous' %}" class="btn btn-amber-soft" style="margin-top:14px; display:inline-flex;">+ Nouveau</a>
+    </div>
+</div>
+
+<div class="rdv-section">
+    <div class="rdv-head">
+        <div class="rdv-title">Rendez-vous récents</div>
+        <a href="{% url 'liste_rendezvous' %}" class="rdv-link">Voir tous →</a>
+    </div>
+    {% if derniers_rdv %}
+        {% for rdv in derniers_rdv %}
+        <div class="rdv-row">
+            <div class="avatar" style="background:#eaf0fb; color:#185fa5">
+                {{ rdv.patient.prenom|first|upper }}{{ rdv.patient.nom|first|upper }}
+            </div>
+            <div class="rdv-info">
+                <div class="rdv-name">{{ rdv.patient.prenom }} {{ rdv.patient.nom }}</div>
+                <div class="rdv-doc">Dr. {{ rdv.medecin.nom }} · {{ rdv.medecin.specialite }}</div>
+            </div>
+            <div class="rdv-meta">
+                {% if rdv.statut == 'confirme' %}<span class="badge badge-blue">Confirmé</span>
+                {% elif rdv.statut == 'annule' %}<span class="badge badge-red">Annulé</span>
+                {% else %}<span class="badge badge-amber">Planifié</span>{% endif %}
+                <div class="rdv-date">{{ rdv.date|date:"d M" }} · {{ rdv.heure|time:"H:i" }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">Aucun rendez-vous pour le moment</div>
+    {% endif %}
+</div>
+{% endblock %}

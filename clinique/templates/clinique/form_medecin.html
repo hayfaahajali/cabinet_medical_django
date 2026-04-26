@@ -1,0 +1,38 @@
+{% extends 'clinique/base.html' %}
+{% block title %}{{ titre }} — Cabinet Médical{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+{% block page_sub %}Médecins{% endblock %}
+
+{% block content %}
+<div style="max-width:560px">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="card-icon" style="background:#eaf0fb">
+                    <svg fill="none" stroke="#185fa5" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <span class="card-title">{{ titre }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="field">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}
+                </div>
+                {% endfor %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-blue-soft">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        Enregistrer
+                    </button>
+                    <a href="{% url 'liste_medecins' %}" class="btn btn-ghost">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
