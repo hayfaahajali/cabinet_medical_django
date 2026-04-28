@@ -1,24 +1,24 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect #render: affiche un template html en lui passant des parametres
 from django.contrib.auth.decorators import login_required
 from .models import Medecin, Patient, RendezVous
 from .forms import MedecinForm, PatientForm, RendezVousForm
 
-# ─── Accueil ───────────────────────────────────────────
+# Accueil 
 @login_required
 def accueil(request):
-    derniers_rdv = RendezVous.objects.order_by('-id')[:5]  # ou '-date' selon votre modèle
-    return render(request, 'clinique/accueil.html', {
+    derniers_rdv = RendezVous.objects.order_by('-id')[:5]  # 5derniers rendez vous
+    return render(request, 'clinique/accueil.html', {# envoie data a acceuil.html pour les afficher
         'nb_medecins': Medecin.objects.count(),
         'nb_patients': Patient.objects.count(),
         'nb_rdv': RendezVous.objects.count(),
         'derniers_rdv': derniers_rdv,
     })
 
-# ─── CRUD Médecin ───────────────────────────────────────
+# CRUD Médecin 
 @login_required
 def liste_medecins(request):
     query = request.GET.get('q', '')
-    medecins = Medecin.objects.filter(
+    medecins = Medecin.objects.filter( #recherche
         nom__icontains=query
     ) | Medecin.objects.filter(
         prenom__icontains=query
@@ -37,14 +37,16 @@ def ajouter_medecin(request):
         form.save()
         return redirect('liste_medecins')
     return render(request, 'clinique/form_medecin.html', {'form': form, 'titre': 'Ajouter un Médecin'})
+
 @login_required
 def modifier_medecin(request, pk):
     medecin = get_object_or_404(Medecin, pk=pk)
-    form = MedecinForm(request.POST or None, instance=medecin)
+    form = MedecinForm(request.POST or None, instance=medecin) #form pré rempli 
     if form.is_valid():
         form.save()
         return redirect('liste_medecins')
     return render(request, 'clinique/form_medecin.html', {'form': form, 'titre': 'Modifier un Médecin'})
+
 @login_required
 def supprimer_medecin(request, pk):
     medecin = get_object_or_404(Medecin, pk=pk)
@@ -53,7 +55,7 @@ def supprimer_medecin(request, pk):
         return redirect('liste_medecins')
     return render(request, 'clinique/confirmer_suppression.html', {'objet': medecin, 'type': 'médecin'})
 
-# ─── CRUD Patient ───────────────────────────────────────
+# CRUD Patient 
 @login_required
 def liste_patients(request):
     query = request.GET.get('q', '')
@@ -94,7 +96,7 @@ def supprimer_patient(request, pk):
         return redirect('liste_patients')
     return render(request, 'clinique/confirmer_suppression.html', {'objet': patient, 'type': 'patient'})
 
-# ─── CRUD Rendez-vous ───────────────────────────────────
+# CRUD Rendez-vous 
 @login_required
 def liste_rendezvous(request):
     query = request.GET.get('q', '')

@@ -1,8 +1,8 @@
 from django import forms
 from .models import Medecin, Patient, RendezVous
-
+ #pour creer les formulaires html automatiquement a partie de model
 class MedecinForm(forms.ModelForm):
-    class Meta:
+    class Meta: #conf form
         model = Medecin
         fields = '__all__'
         widgets = {
